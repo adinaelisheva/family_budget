@@ -32,7 +32,7 @@
       <table>
         <tr ng-repeat="cat in categories">
           <td>{{cat.name}}</td>
-          <td ng-class="getRemainingStyle()">{{getRemaining(cat.name)}}</td>
+          <td class="bg-color: {{cat.color}}, width: {{cat.pctRemaining}}%">{{cat.amtRemaining}}</td>
         <tr>
       </table>
     </div>

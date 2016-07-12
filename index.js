@@ -1,16 +1,41 @@
-angular.module('budget', []).controller('budgetCtrl', ['$scope', function($scope) {
-  $scope.categories = [
-    {name:"cat", budget: 50},
-    {name: "food", budget: 300},
-    {name: "shopping", budget: 50},
-    {name: "etc", budget: 30}
-  ];
+angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', function($scope, $http) {
 
-  $scope.monthlyData = [
-    {name: "Snickers", date: "07/01/16", category: "cat", value: 100},
-    {name: "books", date: "07/04/16", category: "etc", value: 24},
-    {name: "groceries", date: "07/10/16", category: "food", value: 100}
-  ];
+  //AJAX methods
+  var fetchCategories = function(){
+      $http.get("/family-budget/categories.php").success(function(json){
+        return json;
+      });
+  }
+
+  var fetchData = function(){
+      $http.get("/family-budget/month.php").success(function(json){
+        return json;
+      });
+  }
+  
+  $scope.monthlyData = [];//fetchData();
+  $scope.categories = [];//fetchCategories();
+  
+  //set up the remaining data and colors
+  var remaining = {};
+  //start every category with its total budget remaining
+  for(var i = 0; i < $scope.categories.length; i++) {
+    var cat = $scope.categories[i];
+    remaining[cat.name] = cat.budget;
+  }
+  //subtract every item from its category's total
+  for(var i = 0; i < $scope.monthlyData.length; i++) {
+    var item = $scope.monthlyData[i];
+    remaining[item.category] -= item.value;
+  }
+  //save each remaining amount to its category
+  for(var i = 0; i < $scope.categories.length; i++) {
+    var cat = $scope.categories[i];
+    cat.amtRemaining = remaining[cat.name];
+    //TODO - calculate this better
+    cat.pctRemaining = cat.amtRemaining / cat.budget;
+    cat.color = "green";
+  }
   
   $scope.submitbutt = function(){
     alert($scope.newDate+", "+$scope.newName+", "+$scope.newCategory+", "+$scope.newValue); 
@@ -19,27 +44,18 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', function($scope
     alert($scope.transferFrom+", "+$scope.transferTo+", "+$scope.transferAmount); 
   }
   
-  $scope.getRemaining = function(category) {
-    var remaining = 0;
-    for(var i = 0; i < $scope.categories.length; i++) {
-      if ($scope.categories[i].name === category) {
-        remaining = $scope.categories[i].budget;
-        break;
-      }
-    }
+  $scope.getRemaining = function(ind) {
+    var remaining = $scope.categories[ind].budget;
+    var name = $scope.categories[ind].name;
     
-    for(var i = 0; i < $scope.monthlyData.length; i++) {
-      if($scope.monthlyData[i].name === category) {
-        remaining -= $scope.monthlyData[i].amount;
-      }
-    }
+
     
     return remaining;
   
   };
   
   $scope.getRemainingStyle = function() {
-    return "{color: red}"
+    return "";
   }
   
   

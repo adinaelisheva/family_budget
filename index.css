@@ -26,3 +26,7 @@ div table{
 table td, table th {
   padding: 10px;
 }
+
+.blah {
+  color: red;
+}
