@@ -13,8 +13,8 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
       });
   }
   
-  $scope.monthlyData = [];//fetchData();
-  $scope.categories = [];//fetchCategories();
+  $scope.monthlyData = fetchData();
+  $scope.categories = fetchCategories();
   
   //set up the remaining data and colors
   var remaining = {};
