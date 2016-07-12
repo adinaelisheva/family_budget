@@ -20,15 +20,21 @@
         <tr>
         <tr ng-repeat="row in monthlyData">
           <td>{{row.date}}</td>
-          <td>{{row.item}}</td>
+          <td>{{row.name}}</td>
           <td>{{row.category}}</td>
-          <td>{{row.amount | currency}}</td>
+          <td>{{row.value | currency}}</td>
         <tr>
       </table>
     </div>
     
     <div>
-      Results will go here
+      <h4>Remaining:</h4>
+      <table>
+        <tr ng-repeat="cat in categories">
+          <td>{{cat.name}}</td>
+          <td ng-class="getRemainingStyle()">{{getRemaining(cat.name)}}</td>
+        <tr>
+      </table>
     </div>
     
     <div>
@@ -37,11 +43,11 @@
         <tr><td>Date</td><td>Item</td><td>Category</td><td>Amount</td><td></td></tr>
         <tr>
           <td><input type="date" ng-model="newDate"></input></td>
-          <td><input type="text" ng-model="newItem"></td>
+          <td><input type="text" ng-model="newName"></td>
           <td><select ng-model="newCategory">
-            <option ng-repeat="cat in categories">{{cat}}</option>
+            <option ng-repeat="cat in categories">{{cat.name}}</option>
           </select></td>
-          <td>$<input ng-model="newAmount" type="number" min="0" step="0.01"></td>
+          <td>$<input ng-model="newValue" type="number" min="0" step="0.01"></td>
           <td><button ng-click="submitbutt()">Go</button></td>
         </tr>
       </table>
@@ -53,10 +59,10 @@
       <table>
       	<tr><td>From</td><td>To</td><td>Amount</td><td></td></tr>
         <td><select ng-model="transferFrom">
-          <option ng-repeat="cat in categories">{{cat}}</option>
+          <option ng-repeat="cat in categories">{{cat.name}}</option>
         </select></td>
         <td><select ng-model="transferTo">
-          <option ng-repeat="cat in categories">{{cat}}</option>
+          <option ng-repeat="cat in categories">{{cat.name}}</option>
         </select></td>
         <td>$<input ng-model="transferAmount" type="number" min="0" step="0.01"></td>
         <td><button ng-click="transferbutt()">Go</button></td>
