@@ -15,6 +15,9 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
       });
   }
 
+  fetchCategories();
+  fetchData();
+
   var tryCalculateRemaining = function() {
     if (!$scope.monthlyData || !$scope.categories) { return; } 
     
