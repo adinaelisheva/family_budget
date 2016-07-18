@@ -30,3 +30,11 @@ table td, table th {
 .blah {
   color: red;
 }
+
+input[type="text"] {
+  width:90px;
+}
+
+input[type="number"] {
+  width:70px;
+}
