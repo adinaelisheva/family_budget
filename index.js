@@ -1,19 +1,15 @@
 angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', function($scope, $http) {
   
   //AJAX methods
-  var fetchCategories = function(){
-      $http.get("/family-budget/categories.php").success(function(json){
-        $scope.categories = json;
-        tryCalculateRemaining();
-      });
-  }
+  $http.get("/family-budget/categories.php").success(function(json){
+    $scope.categories = json;
+    tryCalculateRemaining();
+  });
 
-  var fetchData = function(){
-      $http.get("/family-budget/month.php").success(function(json){
-        $scope.monthlyData = json;
-        tryCalculateRemaining();
-      });
-  }
+  $http.get("/family-budget/month.php").success(function(json){
+    $scope.monthlyData = json;
+    tryCalculateRemaining();
+  });
   
   //function to interpolate colors and return an RGB style string
   var getPctStyle = function(pct) {
@@ -98,9 +94,7 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
   $scope.getRemainingStyle = function() {
     return "";
   }
-
-  fetchCategories();
-  fetchData();
   
+
   
 }]);
