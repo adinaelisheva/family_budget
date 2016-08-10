@@ -1,5 +1,7 @@
 angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', function($scope, $http) {
   
+  var today = new Date();
+  
   //AJAX methods
   var updatePage = function() {
     $http.get('/family-budget/categories.php').success(function(json){
@@ -21,7 +23,7 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
       tryCalculateRemaining();
     });
     
-    $scope.newDate = new Date();
+    $scope.newDate = today;
   }
   
   //function to interpolate colors and return an RGB style string
@@ -36,8 +38,7 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
     yellow = [210,215,5];
     green = [20,200,20];
     
-    var d = new Date();
-    var curDays = d.getDate();
+    var curDays = today.getDate();
 
     var datePct = (30-curDays)/30;
     var lowPct = Math.max(-0.1,datePct-0.1);
@@ -100,14 +101,10 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
   $scope.submitbutt = function(){
     if(!$scope.newDate || !$scope.newName || !$scope.newCategory || !$scope.newValue) { return; }
     $http.post('/family-budget/add.php', {
-      cat: $scope.newCategory,
-      name: $scope.newName,
-      value: $scope.newValue,
-      date: $scope.newDate
-    }).then(function successCallback(response) {
-
-    }, function errorCallback(response) {
-    
+      'cat': $scope.newCategory,
+      'name': $scope.newName,
+      'value': $scope.newValue,
+      'date': $scope.newDate
     });
     updatePage();
   }
@@ -115,9 +112,9 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
   $scope.transferbutt = function(){
     if(!$scope.transferFrom || !$scope.transferTo || !$scope.transferAmount) { return; }
     $http.post('/family-budget/transfer.php', {
-      catin: $scope.transferTo,
-      catout: $scope.transferFrom,
-      value: $scope.transferAmount
+      'catin': $scope.transferTo,
+      'catout': $scope.transferFrom,
+      'value': $scope.transferAmount
     });
     updatePage();
   }
