@@ -12,13 +12,16 @@
 
   include("common.php"); 
 
-  // Get the category
-  $catin = $_POST['catin'] or die('{"Error":"Category empty"}');
-  $catout = $_POST['catout'] or die('{"Error":"Category empty"}');
+  params = json_decode(file_get_contents('php://input'));
 
-  $value = mysqli_real_escape_string($db, $_POST['value']);
+
+  // Get the category
+  $catin = $params->catin or die('{"Error":"Category empty"}');
+  $catout = $params->catout or die('{"Error":"Category empty"}');
+
+  $value = mysqli_real_escape_string($db, $params->value);
   if (empty($value) || $value == 0) die('{"Error":"Value cannot be empty"}');
-  $date = mysqli_real_escape_string($db, $_POST['date']);
+  $date = mysqli_real_escape_string($db, $params->date);
   if (empty($date)) { 
     $date = time();
   } else {

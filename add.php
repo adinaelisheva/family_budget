@@ -14,13 +14,16 @@
 
   // Get the category
 
-  $cat = mysqli_real_escape_string($db, $_POST['cat']);
+  $params = json_decode(file_get_contents('php://input'));
+
+
+  $cat = mysqli_real_escape_string($db, $params->cat);
   if (empty($cat)) die('{"Error":"cat cannot be empty"}');
-  $name = mysqli_real_escape_string($db, $_POST['name']);
+  $name = mysqli_real_escape_string($db, $params->name);
   if (empty($name)) die('{"Error":"Name cannot be empty"}');
-  $value = mysqli_real_escape_string($db, $_POST['value']);
+  $value = mysqli_real_escape_string($db, $params->value);
   if (empty($value) || $value == 0) die('{"Error":"Value cannot be empty"}');
-  $date = mysqli_real_escape_string($db, $_POST['time']);
+  $date = mysqli_real_escape_string($db, $params->time);
   if (empty($date)) { 
     $date = time();
   } else {
