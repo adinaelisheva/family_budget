@@ -105,6 +105,7 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
       value: $scope.newValue,
       date: $scope.newDate
     });
+    updatePage();
   }
   
   $scope.transferbutt = function(){
@@ -114,6 +115,7 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
       catout: $scope.transferFrom,
       value: $scope.transferAmount
     });
+    updatePage();
   }
   
   updatePage();
