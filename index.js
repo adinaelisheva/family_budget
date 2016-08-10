@@ -104,8 +104,7 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
       name: $scope.newName,
       value: $scope.newValue,
       date: $scope.newDate
-    });
-    updatePage();
+    }).success(updatePage);
   }
   
   $scope.transferbutt = function(){
@@ -114,8 +113,7 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
       catin: $scope.transferTo,
       catout: $scope.transferFrom,
       value: $scope.transferAmount
-    });
-    updatePage();
+    }).success(updatePage);
   }
   
   updatePage();
