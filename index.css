@@ -27,6 +27,14 @@ table td, table th {
   padding: 10px;
 }
 
+table.remaining {
+  border-spacing: 0 15px;
+}
+
+table.remaining td:last-of-type {
+  border-radius: 10px;
+}
+
 .blah {
   color: red;
 }

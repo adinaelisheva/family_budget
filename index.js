@@ -1,15 +1,28 @@
 angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', function($scope, $http) {
   
   //AJAX methods
-  $http.get("/family-budget/categories.php").success(function(json){
-    $scope.categories = json;
-    tryCalculateRemaining();
-  });
+  var updatePage = function() {
+    $http.get("/family-budget/categories.php").success(function(json){
+      $scope.categories = json;
+    
+      tryCalculateRemaining();
+    
+      //set up some initial stuff
+      if(json.length === 0) { return; }
+      $scope.newCategory = json[0].name;
+      $scope.transferFrom = json[0].name;
+      var secondInd = json.length > 1 ? 1 : 0;
+      $scope.transferTo = json[secondInd].name;
+    
+    });
 
-  $http.get("/family-budget/month.php").success(function(json){
-    $scope.monthlyData = json;
-    tryCalculateRemaining();
-  });
+    $http.get("/family-budget/month.php").success(function(json){
+      $scope.monthlyData = json;
+      tryCalculateRemaining();
+    });
+    
+    $scope.newDate = new Date();
+  }
   
   //function to interpolate colors and return an RGB style string
   var getPctStyle = function(pct) {
@@ -20,7 +33,7 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
     yellowPct = 0.25;
     greenPct = 1;
     red = [220,10,10];
-    yellow = [250,235,5];
+    yellow = [210,215,5];
     green = [20,200,20];
     
     var d = new Date();
@@ -85,16 +98,24 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
   }
   
   $scope.submitbutt = function(){
-    alert($scope.newDate+", "+$scope.newName+", "+$scope.newCategory+", "+$scope.newValue); 
+    if(!$scope.newDate || !$scope.newName || !$scope.newCategory || !$scope.newValue) { return; }
+    $http.post("/family-budget/add.php?", {
+      cat: $scope.newCategory,
+      name: $scope.newName,
+      value: $scope.newValue,
+      date: $scope.newDate
+    });
   }
+  
   $scope.transferbutt = function(){
-    alert($scope.transferFrom+", "+$scope.transferTo+", "+$scope.transferAmount); 
+    if(!$scope.transferFrom || !$scope.transferTo || !$scope.transferAmount) { return; }
+    $http.post("/family-budget/transfer.php?", {
+      catin: $scope.transferTo,
+      catout: $scope.transferFrom,
+      value: $scope.transferAmount
+    });
   }
   
-  $scope.getRemainingStyle = function() {
-    return "";
-  }
-  
-
+  updatePage();
   
 }]);

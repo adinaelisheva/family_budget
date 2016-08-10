@@ -29,7 +29,7 @@
     
     <div>
       <h4>Remaining:</h4>
-      <table>
+      <table class="remaining">
         <tr ng-repeat="cat in categories">
           <td>{{cat.name}}</td>
           <td style="background-color: {{cat.color}}">{{cat.amtRemaining | currency}}</td>
@@ -47,7 +47,7 @@
           <td><select ng-model="newCategory">
             <option ng-repeat="cat in categories">{{cat.name}}</option>
           </select></td>
-          <td>$<input ng-model="newValue" type="number" min="0" step="0.01"></td>
+          <td>$&nbsp;<input ng-model="newValue" type="number" min="0" step="0.01"></td>
           <td><button ng-click="submitbutt()">Go</button></td>
         </tr>
       </table>
