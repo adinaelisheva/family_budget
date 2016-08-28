@@ -35,14 +35,18 @@ table.remaining td:last-of-type {
   border-radius: 10px;
 }
 
-.blah {
-  color: red;
-}
-
 input[type="text"] {
   width:90px;
 }
 
 input[type="number"] {
   width:70px;
+}
+
+.container {
+  display: flex;
+}
+
+table.monthlyRem {
+  margin-right: 100px;
 }
