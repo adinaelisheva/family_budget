@@ -23,11 +23,16 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
       tryCalculateRemaining();
     });
     
+    $http.get('/family-budget/year.php').success(function(json){
+      $scope.yearlyData = json;
+      tryCalculateRemaining();
+    });
+    
     $scope.newDate = today;
   }
   
   //function to interpolate colors and return an RGB style string
-  var getPctStyle = function(pct) {
+  var getPctStyle = function(pct, yearly) {
     var color = [0,0,0];
     
     //colors and percentages for interpolation
@@ -39,8 +44,12 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
     green = [20,200,20];
     
     var curDays = today.getDate();
+    if(yearly) {
+      curDays += 30 * (today.getMonth() - 1); //approximate day of year
+    }
+    var totalDays = yearly ? 361 : 30;
 
-    var datePct = (30-curDays)/30;
+    var datePct = (totalDays-curDays)/totalDays;
     var lowPct = Math.max(-0.1,datePct-0.1);
     var highPct = Math.min(1,datePct+0.1);
     
@@ -74,7 +83,9 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
   }
 
   var tryCalculateRemaining = function() {
-    if (!$scope.monthlyData || !$scope.categories) { return; } 
+    if (!$scope.monthlyData || !$scope.yearlyData || !$scope.categories) { return; } 
+    
+    var data = $scope.monthlyData.concat($scope.yearlyData);
     
     //set up the remaining data and colors
     var remaining = {};
@@ -84,17 +95,17 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
       remaining[cat.name] = cat.budget;
     }
     //subtract every item from its category's total
-    for(var i = 0; i < $scope.monthlyData.length; i++) {
-      var item = $scope.monthlyData[i];
+    for(var i = 0; i < data.length; i++) {
+      var item = data[i];
       remaining[item.category] -= item.value;
     }
+
     //save each remaining amount to its category
     for(var i = 0; i < $scope.categories.length; i++) {
       var cat = $scope.categories[i];
       cat.amtRemaining = remaining[cat.name];
-      //TODO - calculate this better
       cat.pctRemaining = cat.amtRemaining / cat.budget;
-      cat.color = getPctStyle(cat.pctRemaining);
+      cat.color = getPctStyle(cat.pctRemaining, cat.yearly);
     }
   }
   

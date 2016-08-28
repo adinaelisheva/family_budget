@@ -10,31 +10,22 @@
     <title>Adinex Finances</title>
   </head>
   <body ng-app="budget" ng-controller="budgetCtrl">
-    <div>
-      <table>
-        <tr>
-          <th>Date</th>
-          <th>Item</th>
-          <th>Category</th>
-          <th>Amount</th>
-        <tr>
-        <tr ng-repeat="row in monthlyData" ng-if="row.visible">
-          <td>{{row.date}}</td>
-          <td>{{row.name}}</td>
-          <td>{{row.category}}</td>
-          <td>{{row.value | currency}}</td>
-        <tr>
-      </table>
-    </div>
     
-    <div>
-      <h4>Remaining:</h4>
-      <table class="remaining">
-        <tr ng-repeat="cat in categories">
+    <div class="container">      
+      <table class="remaining monthlyRem">
+        <tr ng-repeat="cat in categories" ng-hide="cat.yearly">
           <td>{{cat.name}}</td>
           <td style="background-color: {{cat.color}}">{{cat.amtRemaining | currency}}</td>
         <tr>
       </table>
+      
+      <table class="remaining">
+        <tr ng-repeat="cat in categories" ng-show="cat.yearly">
+          <td>{{cat.name}}</td>
+          <td style="background-color: {{cat.color}}">{{cat.amtRemaining | currency}}</td>
+        <tr>
+      </table>
+      
     </div>
     
     <div>
@@ -58,17 +49,53 @@
       <h4>Transfer from one category to another: </h4>
       <table>
       	<tr><td>From</td><td>To</td><td>Amount</td><td></td></tr>
-        <td><select ng-model="transferFrom">
-          <option ng-repeat="cat in categories">{{cat.name}}</option>
-        </select></td>
-        <td><select ng-model="transferTo">
-          <option ng-repeat="cat in categories">{{cat.name}}</option>
-        </select></td>
-        <td>$&nbsp;<input ng-model="transferAmount" type="number" min="0" step="0.01"></td>
-        <td><button ng-click="transferbutt()">Go</button></td>
-      </tr>
-    </table>
-  </div>
+      	<tr>
+          <td><select ng-model="transferFrom">
+            <option ng-repeat="cat in categories">{{cat.name}}</option>
+          </select></td>
+          <td><select ng-model="transferTo">
+            <option ng-repeat="cat in categories">{{cat.name}}</option>
+          </select></td>
+          <td>$&nbsp;<input ng-model="transferAmount" type="number" min="0" step="0.01"></td>
+          <td><button ng-click="transferbutt()">Go</button></td>
+        </tr>
+      </table>
+    </div>
+  
+    <div>
+      <h4>Monthly:</h4>
+      <table>
+        <tr>
+          <th>Date</th>
+          <th>Item</th>
+          <th>Category</th>
+          <th>Amount</th>
+        <tr>
+        <tr ng-repeat="row in monthlyData" ng-if="row.visible">
+          <td>{{row.date}}</td>
+          <td>{{row.name}}</td>
+          <td>{{row.category}}</td>
+          <td>{{row.value | currency}}</td>
+        <tr>
+      </table>
+    </div>
+    <div>
+      <h4>Yearly:</h4>
+      <table>
+        <tr>
+          <th>Date</th>
+          <th>Item</th>
+          <th>Category</th>
+          <th>Amount</th>
+        <tr>
+        <tr ng-repeat="row in yearlyData" ng-if="row.visible">
+          <td>{{row.date}}</td>
+          <td>{{row.name}}</td>
+          <td>{{row.category}}</td>
+          <td>{{row.value | currency}}</td>
+        <tr>
+      </table>
+    </div>
     
   </body>
 </html>
