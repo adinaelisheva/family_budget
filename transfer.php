@@ -12,7 +12,7 @@
 
   include("common.php"); 
 
-  params = json_decode(file_get_contents('php://input'));
+  $params = json_decode(file_get_contents('php://input'));
 
 
   // Get the category
