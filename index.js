@@ -2,8 +2,19 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
   
   var today = new Date();
   
+  var resetInputs = function() {
+    $scope.newCategory = $scope.categories[0].name;
+    $scope.transferFrom = $scope.categories[0].name;
+    var secondInd = $scope.categories.length > 1 ? 1 : 0;
+    $scope.transferTo = $scope.categories[secondInd].name;
+    $scope.newName = "";
+    $scope.newValue = "";
+    $scope.newDate = today;
+    $scope.transferAmount = "";
+  }
+  
   //AJAX methods
-  var updatePage = function() {
+  var updatePage = function(notifyStr) {
     $http.get('/family-budget/categories.php').success(function(json){
       $scope.categories = json;
     
@@ -11,10 +22,11 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
     
       //set up some initial stuff
       if(json.length === 0) { return; }
-      $scope.newCategory = json[0].name;
-      $scope.transferFrom = json[0].name;
-      var secondInd = json.length > 1 ? 1 : 0;
-      $scope.transferTo = json[secondInd].name;
+      resetInputs();
+      
+      if (notifyStr) {
+        $.notify(notifyStr,"success");
+      };
     
     });
 
@@ -28,7 +40,6 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
       tryCalculateRemaining();
     });
     
-    $scope.newDate = today;
   }
   
   //function to interpolate colors and return an RGB style string
@@ -116,7 +127,7 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
       'name': $scope.newName,
       'value': $scope.newValue,
       'date': $scope.newDate
-    }).success(updatePage);
+    }).success(function() { updatePage($scope.newName+" successfully added."); });
   }
   
   $scope.transferbutt = function(){
@@ -125,7 +136,15 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
       'catin': $scope.transferTo,
       'catout': $scope.transferFrom,
       'value': $scope.transferAmount
-    }).success(updatePage);
+    }).success(function() { updatePage("Transfer successful."); });
+  }
+  
+  $scope.submitKey = function(event) {
+    if (event.which === 13) { $scope.submitbutt(); }
+  }
+  
+  $scope.transferKey = function(event) {
+    if (event.which === 13) { $scope.transferbutt(); }
   }
   
   updatePage();

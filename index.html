@@ -4,14 +4,15 @@
   <head>
 
     <link href="index.css" type="text/css" rel="stylesheet" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
-    <script src="index.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+    <script type="text/javascript" src="index.js"></script>
     <title>Adinex Finances</title>
   </head>
   <body ng-app="budget" ng-controller="budgetCtrl">
     
-    <div class="container">      
+    <div class="budget container">      
       <table class="remaining monthlyRem">
         <tr ng-repeat="cat in categories" ng-hide="cat.yearly">
           <td>{{cat.name}}</td>
@@ -28,24 +29,24 @@
       
     </div>
     
-    <div>
+    <div class="budget">
       <h4>Enter new row:</h4>
       <table>
         <tr><td>Date</td><td>Item</td><td>Category</td><td>Amount</td><td></td></tr>
         <tr>
           <td><input type="date" ng-model="newDate"></input></td>
-          <td><input type="text" ng-model="newName"></td>
+          <td><input type="text" ng-model="newName" ng-keypress="submitKey($event)"></td>
           <td><select ng-model="newCategory">
             <option ng-repeat="cat in categories">{{cat.name}}</option>
           </select></td>
-          <td>$&nbsp;<input ng-model="newValue" type="number" min="0" step="0.01"></td>
+          <td>$&nbsp;<input ng-model="newValue" type="number" min="0" step="0.01" ng-keypress="submitKey($event)"></td>
           <td><button ng-click="submitbutt()">Go</button></td>
         </tr>
       </table>
       
     </div>
 
-    <div>
+    <div class="budget">
       <h4>Transfer from one category to another: </h4>
       <table>
       	<tr><td>From</td><td>To</td><td>Amount</td><td></td></tr>
@@ -56,13 +57,13 @@
           <td><select ng-model="transferTo">
             <option ng-repeat="cat in categories">{{cat.name}}</option>
           </select></td>
-          <td>$&nbsp;<input ng-model="transferAmount" type="number" min="0" step="0.01"></td>
+          <td>$&nbsp;<input ng-model="transferAmount" type="number" min="0" step="0.01" ng-keypress="transferKey($event)"></td>
           <td><button ng-click="transferbutt()">Go</button></td>
         </tr>
       </table>
     </div>
   
-    <div>
+    <div class="budget">
       <h4>Monthly:</h4>
       <table>
         <tr>
@@ -79,7 +80,7 @@
         <tr>
       </table>
     </div>
-    <div>
+    <div class="budget">
       <h4>Yearly:</h4>
       <table>
         <tr>

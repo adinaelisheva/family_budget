@@ -3,7 +3,7 @@ body {
   background-repeat: repeat;
 }
 
-div {
+div.budget {
 	background-color: rgba(120,120,120,0.7);
 	width: 50%;
 	min-width: 650px;
@@ -19,7 +19,7 @@ div {
 	font-size: 18px;
 }
 
-div table{
+div.budget table{
   color: white;
 }
 
