@@ -1,4 +1,4 @@
-angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', function($scope, $http) {
+angular.module('budget').controller('budgetCtrl', ['$scope', 'httpSrvc', function($scope, httpSrvc) {
   
   var today = new Date();
   
@@ -13,31 +13,22 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
     $scope.transferAmount = "";
   }
   
-  //AJAX methods
   var updatePage = function(notifyStr) {
-    $http.get('/family-budget/categories.php').success(function(json){
-      $scope.categories = json;
-    
-      tryCalculateRemaining();
+    httpSrvc.fetchAllData().then(function() {
+      $scope.categories = httpSrvc.data.categories;
+      $scope.monthlyData = httpSrvc.data.monthly;
+      $scope.yearlyData = httpSrvc.data.yearly;
+      
+      calculateRemaining();
     
       //set up some initial stuff
-      if(json.length === 0) { return; }
+      if($scope.categories.length === 0) { return; }
       resetInputs();
       
       if (notifyStr) {
         $.notify(notifyStr,"success");
       };
     
-    });
-
-    $http.get('/family-budget/month.php').success(function(json){
-      $scope.monthlyData = json;
-      tryCalculateRemaining();
-    });
-    
-    $http.get('/family-budget/year.php').success(function(json){
-      $scope.yearlyData = json;
-      tryCalculateRemaining();
     });
     
   }
@@ -93,9 +84,7 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
 
   }
 
-  var tryCalculateRemaining = function() {
-    if (!$scope.monthlyData || !$scope.yearlyData || !$scope.categories) { return; } 
-    
+  var calculateRemaining = function() {
     var data = $scope.monthlyData.concat($scope.yearlyData);
     
     //set up the remaining data and colors
@@ -121,22 +110,15 @@ angular.module('budget', []).controller('budgetCtrl', ['$scope', '$http', functi
   }
   
   $scope.submitbutt = function(){
-    if(!$scope.newDate || !$scope.newName || !$scope.newCategory || !$scope.newValue) { return; }
-    $http.post('/family-budget/add.php', {
-      'cat': $scope.newCategory,
-      'name': $scope.newName,
-      'value': $scope.newValue,
-      'date': $scope.newDate
-    }).success(function() { updatePage($scope.newName+" successfully added."); });
+    httpSrvc.submit($scope.newDate, $scope.newName, $scope.newCategory, 
+      $scope.newValue).then(function() { 
+        updatePage($scope.newName+" successfully added."); 
+      });
   }
   
   $scope.transferbutt = function(){
-    if(!$scope.transferFrom || !$scope.transferTo || !$scope.transferAmount) { return; }
-    $http.post('/family-budget/transfer.php', {
-      'catin': $scope.transferTo,
-      'catout': $scope.transferFrom,
-      'value': $scope.transferAmount
-    }).success(function() { updatePage("Transfer successful."); });
+    httpSrvc.transfer($scope.transferFrom, $scope.transferTo, 
+      $scope.transferAmount).then(function() { updatePage("Transfer successful."); });
   }
   
   $scope.submitKey = function(event) {
