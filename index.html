@@ -44,6 +44,23 @@
           <td><button ng-click="submitbutt()">Go</button></td>
         </tr>
       </table>
+
+      <h4>Enter new row (v2):</h4>
+      <table>
+        <tr><td>Date</td><td>Item</td><td>Amount</td></tr>
+        <tr>
+          <td><input type="date" ng-model="newDate"></input></td>
+          <td><input type="text" ng-model="newName" ng-keypress="submitKey($event)"></td>
+          <td>$&nbsp;<input ng-model="newValue" type="number" min="0" step="0.01" ng-keypress="submitKey($event)"></td>
+        </tr>
+      </table>
+      Insert Into:
+      <table>
+        <tr>
+          <td><button ng-repeat="cat in categories" ng-click="submitToCat(cat.name)">{{cat.name}}</button></td>
+        </tr>
+      </table>
+
       
     </div>
 

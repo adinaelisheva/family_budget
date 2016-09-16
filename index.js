@@ -115,7 +115,16 @@ angular.module('budget').controller('budgetCtrl', ['$scope', 'httpSrvc', functio
         updatePage($scope.newName+" successfully added."); 
       });
   }
+
+  $scope.submitToCat = function(cat){
+    console.log("submitToCat: " + $scope.newDate + ", " + $scope.newName + ", " + cat + ", " + $scope.newValue)
+    httpSrvc.submit($scope.newDate, $scope.newName, cat, 
+      $scope.newValue).then(function() { 
+        updatePage($scope.newName+" successfully added."); 
+      });
+  }
   
+
   $scope.transferbutt = function(){
     httpSrvc.transfer($scope.transferFrom, $scope.transferTo, 
       $scope.transferAmount).then(function() { updatePage("Transfer successful."); });
