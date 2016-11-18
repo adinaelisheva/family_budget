@@ -31,13 +31,13 @@
   $datestr = date ("Y-m-d", $date);
  
  $sql = "INSERT INTO transactions (name, category, value, date, visible) 
-         SELECT 'TRANSFER-IN', id, $value, '$datestr',0 FROM categories WHERE name = '$catin'";
+         SELECT 'TRANSFER-IN', id, -$value, '$datestr',0 FROM categories WHERE name = '$catin';";
   echo("SQL: $sql\n\n");
   $result = mysqli_query($db, $sql) or die('{"Error":"'+mysqli_error($db)+'"}');
   $id1 = $db->insert_id;
 
   $sql = "INSERT INTO transactions (name, category, value, date, visible) 
-          SELECT 'TRANSFER-OUT', id, -$value, '$datestr',0 FROM categories WHERE name = '$catout'";
+          SELECT 'TRANSFER-OUT', id, $value, '$datestr',0 FROM categories WHERE name = '$catout';";
   echo("SQL: $sql\n\n");
   $result = mysqli_query($db, $sql) or die('{"Error":"'+mysqli_error($db)+'"}');
   $id2 = $db->insert_id;
