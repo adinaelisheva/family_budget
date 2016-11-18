@@ -1,4 +1,4 @@
-angular.module('budget').controller('budgetCtrl', ['$scope', 'httpSrvc', function($scope, httpSrvc) {
+angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpSrvc', function($scope, $interval, httpSrvc) {
   
   var today = new Date();
   
@@ -139,5 +139,8 @@ angular.module('budget').controller('budgetCtrl', ['$scope', 'httpSrvc', functio
   }
   
   updatePage();
+
+  var delay = 1000*60*5; //five minutes
+  var refreshPageInterval = $interval(updatePage, delay);
   
 }]);
