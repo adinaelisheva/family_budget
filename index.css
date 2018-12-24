@@ -88,9 +88,14 @@ table.monthlyRem {
 	.formItem input,
 	.formItem select,
 	.formItem button,
+	.formRow button,
 	.formItem .label {
 		width: 95%;
 		font-size: 36px;
+	}
+
+	.formRow button {
+    margin: 10px 0;
 	}
 
 	.formItem {
