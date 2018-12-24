@@ -50,3 +50,56 @@ input[type="number"] {
 table.monthlyRem {
   margin-right: 100px;
 }
+
+.formRow {
+	display: flex;
+}
+
+.formItem {
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+}
+.formItem .label {
+	height: 30px;
+}
+.formItem .label.category {
+	height: 31px;
+}
+.formItem .label.amount {
+	height: 27px;
+}
+.formItem .label.submit {
+	height: 32px;
+}
+
+@media (max-width: 568px) {
+
+	div.budget {
+		width: 100%;
+		min-width: initial;
+		box-sizing: border-box;
+	}
+
+	.formRow {
+		flex-direction: column;
+	}
+
+	.formItem input,
+	.formItem select,
+	.formItem button,
+	.formItem .label {
+		width: 95%;
+		font-size: 36px;
+	}
+
+	.formItem {
+		max-width: 90%;
+	}
+
+	.formItem .label {
+		height: initial;
+		margin-bottom: 10px;
+	}
+
+}
