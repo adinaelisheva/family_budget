@@ -102,4 +102,11 @@ table.monthlyRem {
 		margin-bottom: 10px;
 	}
 
+	.formItem.amount span {
+		font-size: 36px;
+	}
+	.formItem.amount input {
+		width: 90%;
+	}
+
 }
