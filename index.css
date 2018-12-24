@@ -117,4 +117,8 @@ table.monthlyRem {
 		width: 86%;
 	}
 
+	.container {
+		flex-direction: column;
+	}
+
 }
