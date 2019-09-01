@@ -60,7 +60,7 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
   
   //function to interpolate colors and return an RGB style string
   function getPctStyle(pct, yearly) {
-    const color = [0,0,0];
+    let color = [0,0,0];
     
     //colors and percentages for interpolation
     redPct = 0;
@@ -89,16 +89,16 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     else if(pct < datePct) {
       //interpolate between red and yellow
       const curPct = (pct - lowPct)/(datePct - lowPct);
-      color[0] = Math.round( red[0] + curPct * (yellow[0] - red[0]));
-      color[1] = Math.round( red[1] + curPct * (yellow[1] - red[1]));
-      color[2] = Math.round( red[2] + curPct * (yellow[2] - red[2]));
+      color[0] = Math.round(red[0] + curPct * (yellow[0] - red[0]));
+      color[1] = Math.round(red[1] + curPct * (yellow[1] - red[1]));
+      color[2] = Math.round(red[2] + curPct * (yellow[2] - red[2]));
     }  
     else {
       //interpolate between yellow and green
       const curPct = (pct - datePct)/(highPct - datePct);
-      color[0] = Math.round( yellow[0] + curPct * (green[0] - yellow[0]));
-      color[1] = Math.round( yellow[1] + curPct * (green[1] - yellow[1]));
-      color[2] = Math.round( yellow[2] + curPct * (green[2] - yellow[2]));
+      color[0] = Math.round(yellow[0] + curPct * (green[0] - yellow[0]));
+      color[1] = Math.round(yellow[1] + curPct * (green[1] - yellow[1]));
+      color[2] = Math.round(yellow[2] + curPct * (green[2] - yellow[2]));
     }
 
     pct = Math.max(0,Math.min(100,pct * 100));
