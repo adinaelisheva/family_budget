@@ -113,18 +113,18 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     //set up the remaining data and colors
     const remaining = {};
     //start every category with its total budget remaining
-    for(const i = 0; i < $scope.categories.length; i++) {
+    for(let i = 0; i < $scope.categories.length; i++) {
       const cat = $scope.categories[i];
       remaining[cat.name] = cat.budget;
     }
     //subtract every item from its category's total
-    for(const i = 0; i < data.length; i++) {
+    for(let i = 0; i < data.length; i++) {
       const item = data[i];
       remaining[item.category] -= item.value;
     }
 
     //save each remaining amount to its category
-    for(const i = 0; i < $scope.categories.length; i++) {
+    for(let i = 0; i < $scope.categories.length; i++) {
       const cat = $scope.categories[i];
       cat.amtRemaining = remaining[cat.name];
       cat.pctRemaining = cat.amtRemaining / cat.budget;

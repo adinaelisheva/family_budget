@@ -14,21 +14,23 @@
   </head>
   <body ng-app="budget" ng-controller="budgetCtrl">
     
-    <div class="budget container">
+    <div class="budget">
       <h2>{{monthLabel}}</h2>
-      <table class="remaining monthlyRem">
-        <tr ng-repeat="cat in categories" ng-hide="cat.yearly">
-          <td>{{cat.name}}</td>
-          <td style="background-color: {{cat.color}}">{{cat.amtRemaining | currency}}</td>
-        <tr>
-      </table>
-      
-      <table class="remaining">
-        <tr ng-repeat="cat in categories" ng-show="cat.yearly">
-          <td>{{cat.name}}</td>
-          <td style="background-color: {{cat.color}}">{{cat.amtRemaining | currency}}</td>
-        <tr>
-      </table>
+      <div class="container">
+        <table class="remaining monthlyRem">
+          <tr ng-repeat="cat in categories" ng-hide="cat.yearly">
+            <td>{{cat.name}}</td>
+            <td style="background-color: {{cat.color}}">{{cat.amtRemaining | currency}}</td>
+          <tr>
+        </table>
+        
+        <table class="remaining">
+          <tr ng-repeat="cat in categories" ng-show="cat.yearly">
+            <td>{{cat.name}}</td>
+            <td style="background-color: {{cat.color}}">{{cat.amtRemaining | currency}}</td>
+          <tr>
+        </table>
+      </div>
       
     </div>
     
