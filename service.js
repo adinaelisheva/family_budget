@@ -1,6 +1,6 @@
 angular.module('budget',[]).service('httpSrvc', ['$http', function ($http) {
   
-  var data = {
+  const data = {
     categories: [],
     monthly: [],
     yearly: []
