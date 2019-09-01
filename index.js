@@ -62,15 +62,12 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
   function getPctStyle(pct, yearly) {
     let color = [0,0,0];
     
-    //colors and percentages for interpolation
-    redPct = 0;
-    yellowPct = 0.25;
-    greenPct = 1;
-    red = [220,10,10];
-    yellow = [210,215,5];
-    green = [20,200,20];
+    //colors for interpolation
+    let red = [220,10,10];
+    let yellow = [210,215,5];
+    let green = [20,200,20];
     
-    const curDays = today.getDate();
+    let curDays = today.getDate();
     if(yearly) {
       curDays += 30 * (today.getMonth() - 1); //approximate day of year
     }
