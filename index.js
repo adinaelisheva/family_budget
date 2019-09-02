@@ -9,11 +9,11 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     const usp = new URLSearchParams(window.location.search);
     let queryMonth = usp.get('m');
     let queryYear = usp.get('y');
-    if (!queryMonth || !queryYear) {
+    if (!queryMonth && !queryYear) {
       return today;
     }
-    queryMonth = Number(queryMonth);
-    queryYear = Number(queryYear);
+    queryMonth = queryMonth ? Number(queryMonth) : today.getMonth() + 1;
+    queryYear = queryYear ? Number(queryYear) : today.getFullYear();
     if (isNaN(queryMonth) || isNaN(queryYear)) {
       return today;
     }
@@ -39,7 +39,9 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
   }
   
   function updatePage(notifyStr) {
-    httpSrvc.fetchAllData().then(function() {
+    const m = months[today.getMonth()];
+    const y = today.getFullYear();
+    httpSrvc.fetchAllData(m, y).then(function() {
       $scope.categories = httpSrvc.data.categories;
       $scope.monthlyData = httpSrvc.data.monthly;
       $scope.yearlyData = httpSrvc.data.yearly;
