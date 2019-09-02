@@ -53,7 +53,7 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     const newDate = new Date(`${prevMonth + 1} 1 ${prevYear}`);
 
     await httpSrvc.fetchAllData(prevMonth, prevYear);
-    const remaining = calculateRemaining($scope.monthlyData);
+    const remaining = calculateRemaining(httpSrvc.data.monthly);
     for (cat in remaining) {
       if (remaining[cat] < 0 ) {
         await httpSrvc.submit(newDate, 'Overflow', cat, remaining[cat] * -1);
