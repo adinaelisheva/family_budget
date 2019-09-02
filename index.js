@@ -2,8 +2,6 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const days = [31,28,31,30,31,30,31,31,30,31,30,31];
 
-  let checkOverflow = true;
-
   // Returns a Date for either the last day of the month indicated
   // in the URL, or today.
   function getValidDate() {
@@ -62,8 +60,7 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
       }
     }
     
-    checkOverflow = false; // Only do it once.
-    await updatePage();
+    await fetchCurrentData();
   }
 
   async function updatePage(notifyStr) {
@@ -73,8 +70,7 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     $scope.yearlyData = httpSrvc.data.yearly;
     
     const today = new Date();
-    if (checkOverflow &&
-        monthlyDate.getMonth() === today.getMonth() &&
+    if (monthlyDate.getMonth() === today.getMonth() &&
         monthlyDate.getYear() === today.getYear() &&
         $scope.monthlyData.length === 0) {
       // It's a new month!
@@ -90,7 +86,7 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     if (notifyStr) {
       $.notify(notifyStr, 'success');
     };
-    
+    $rootScope.digest();
   }
   
   //function to interpolate colors and return an RGB style string
