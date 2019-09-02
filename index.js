@@ -38,25 +38,23 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     $scope.transferAmount = "";
   }
   
-  function updatePage(notifyStr) {
+  async function updatePage(notifyStr) {
     const m = today.getMonth() + 1; // PHP months are 1-indexed
     const y = today.getFullYear();
-    httpSrvc.fetchAllData(m, y).then(function() {
-      $scope.categories = httpSrvc.data.categories;
-      $scope.monthlyData = httpSrvc.data.monthly;
-      $scope.yearlyData = httpSrvc.data.yearly;
-      
-      calculateRemaining();
+    await httpSrvc.fetchAllData(m, y)
+    $scope.categories = httpSrvc.data.categories;
+    $scope.monthlyData = httpSrvc.data.monthly;
+    $scope.yearlyData = httpSrvc.data.yearly;
     
-      //set up some initial stuff
-      if($scope.categories.length === 0) { return; }
-      resetInputs();
-      
-      if (notifyStr) {
-        $.notify(notifyStr,"success");
-      };
+    calculateRemaining();
+  
+    //set up some initial stuff
+    if($scope.categories.length === 0) { return; }
+    resetInputs();
     
-    });
+    if (notifyStr) {
+      $.notify(notifyStr,"success");
+    };
     
   }
   
@@ -131,25 +129,21 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     }
   }
   
-  $scope.submitbutt = function(){
-    httpSrvc.submit($scope.newDate, $scope.newName, $scope.newCategory, 
-      $scope.newValue).then(function() { 
-        updatePage($scope.newName+" successfully added."); 
-      });
+  $scope.submitbutt = async function(){
+    await httpSrvc.submit($scope.newDate, $scope.newName, $scope.newCategory, $scope.newValue);
+    updatePage($scope.newName+" successfully added."); 
   }
 
-  $scope.submitToCat = function(cat){
+  $scope.submitToCat = async function(cat){
     console.log("submitToCat: " + $scope.newDate + ", " + $scope.newName + ", " + cat + ", " + $scope.newValue)
-    httpSrvc.submit($scope.newDate, $scope.newName, cat, 
-      $scope.newValue).then(function() { 
-        updatePage($scope.newName+" successfully added."); 
-      });
+    await httpSrvc.submit($scope.newDate, $scope.newName, cat, $scope.newValue)
+    updatePage($scope.newName+" successfully added."); 
   }
   
 
-  $scope.transferbutt = function(){
-    httpSrvc.transfer($scope.transferFrom, $scope.transferTo, 
-      $scope.transferAmount).then(function() { updatePage("Transfer successful."); });
+  $scope.transferbutt = async function(){
+    await httpSrvc.transfer($scope.transferFrom, $scope.transferTo,  $scope.transferAmount);
+    updatePage("Transfer successful.");
   }
   
   $scope.submitKey = function(event) {
