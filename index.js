@@ -25,35 +25,65 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     return new Date(`${months[queryMonth]} ${queryDay} ${queryYear}`);
   }
 
-  const today = getValidDate();
+  const monthlyDate = getValidDate();
   
   function resetInputs() {
     $scope.newCategory = $scope.categories[0].name;
     $scope.transferFrom = $scope.categories[0].name;
     const secondInd = $scope.categories.length > 1 ? 1 : 0;
     $scope.transferTo = $scope.categories[secondInd].name;
-    $scope.newName = "";
-    $scope.newValue = "";
-    $scope.newDate = today;
-    $scope.transferAmount = "";
+    $scope.newName = '';
+    $scope.newValue = '';
+    $scope.newDate = monthlyDate;
+    $scope.transferAmount = '';
+  }
+
+  async function fetchCurrentData() {
+    const m = monthlyDate.getMonth() + 1; // PHP months are 1-indexed
+    const y = monthlyDate.getFullYear();
+    await httpSrvc.fetchAllData(m, y);
   }
   
+  async function potentiallyOverflow() {
+    const curMonth = monthlyDate.getMonth();
+    const curYear = monthlyDate.getFullYear();
+    const prevMonth = curMonth === 0 ? 11 : curMonth - 1;
+    const prevYear = curMonth === 0 ? curYear - 1 : curYear;
+    const newDate = new Date(`${prevMonth + 1} 1 ${prevYear}`);
+
+    await fetchAllData(prevMonth, prevYear);
+    const remaining = calculateRemaining($scope.monthlyData);
+    for (cat in remaining) {
+      if (remaining[cat] < 0 ) {
+        await httpSrvc.submit(newDate, 'Overflow', cat, remaining[cat] * -1);
+      }
+    }
+    
+    await fetchCurrentData();
+  }
+
   async function updatePage(notifyStr) {
-    const m = today.getMonth() + 1; // PHP months are 1-indexed
-    const y = today.getFullYear();
-    await httpSrvc.fetchAllData(m, y)
+    await fetchCurrentData();
     $scope.categories = httpSrvc.data.categories;
     $scope.monthlyData = httpSrvc.data.monthly;
     $scope.yearlyData = httpSrvc.data.yearly;
     
-    calculateRemaining();
+    const today = new Date();
+    if (monthlyDate.getMonth() === today.getMonth() &&
+        monthlyDate.getYear() === today.getYear() &&
+        $scope.monthlyData.length == 0) {
+      // It's a new month!
+      await potentiallyOverflow();
+    }
+
+    setupRemainingColors();
   
     //set up some initial stuff
     if($scope.categories.length === 0) { return; }
     resetInputs();
     
     if (notifyStr) {
-      $.notify(notifyStr,"success");
+      $.notify(notifyStr, 'success');
     };
     
   }
@@ -67,9 +97,9 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     let yellow = [210,215,5];
     let green = [20,200,20];
     
-    let curDays = today.getDate();
+    let curDays = monthlyDate.getDate();
     if(yearly) {
-      curDays += 30 * (today.getMonth() - 1); //approximate day of year
+      curDays += 30 * (monthlyDate.getMonth() - 1); //approximate day of year
     }
     const totalDays = yearly ? 361 : 30;
 
@@ -100,14 +130,11 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
 
     pct = Math.max(0,Math.min(100,pct * 100));
 
-    return 'rgb('+color[0]+','+color[1]+','+color[2]+')';
+    return `rgb(${color[0]},${color[1]},${color[2]})`;
 
   }
 
-  function calculateRemaining() {
-    const data = $scope.monthlyData.concat($scope.yearlyData);
-    
-    //set up the remaining data and colors
+  function calculateRemaining(data) {
     const remaining = {};
     //start every category with its total budget remaining
     for(let i = 0; i < $scope.categories.length; i++) {
@@ -119,6 +146,14 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
       const item = data[i];
       remaining[item.category] -= item.value;
     }
+    return remaining;
+  }
+
+  function setupRemainingColors() {
+    const data = $scope.monthlyData.concat($scope.yearlyData);
+    
+    //set up the remaining data and colors
+    const remaining = calculateRemaining(data);
 
     //save each remaining amount to its category
     for(let i = 0; i < $scope.categories.length; i++) {
@@ -131,19 +166,19 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
   
   $scope.submitbutt = async function(){
     await httpSrvc.submit($scope.newDate, $scope.newName, $scope.newCategory, $scope.newValue);
-    updatePage($scope.newName+" successfully added."); 
+    updatePage(`${$scope.newName} successfully added.`); 
   }
 
   $scope.submitToCat = async function(cat){
-    console.log("submitToCat: " + $scope.newDate + ", " + $scope.newName + ", " + cat + ", " + $scope.newValue)
+    console.log(`submitToCat: ${$scope.newDate}, ${$scope.newName}, ${cat}, ${$scope.newValue}`);
     await httpSrvc.submit($scope.newDate, $scope.newName, cat, $scope.newValue)
-    updatePage($scope.newName+" successfully added."); 
+    updatePage(`${$scope.newName} successfully added.`); 
   }
   
 
   $scope.transferbutt = async function(){
     await httpSrvc.transfer($scope.transferFrom, $scope.transferTo,  $scope.transferAmount);
-    updatePage("Transfer successful.");
+    updatePage('Transfer successful.');
   }
   
   $scope.submitKey = function(event) {
@@ -154,7 +189,7 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     if (event.which === 13) { $scope.transferbutt(); }
   }
 
-  $scope.monthLabel = months[today.getMonth()];
+  $scope.monthLabel = months[monthlyDate.getMonth()];
   
   updatePage();
 
