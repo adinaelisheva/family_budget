@@ -45,10 +45,11 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
   }
   
   async function potentiallyOverflow() {
-    const curMonth = monthlyDate.getMonth();
+    // this works because JS months are 0-indexed, but php and strings are 1-indexed
+    let prevMonth = monthlyDate.getMonth();
     const curYear = monthlyDate.getFullYear();
-    const prevMonth = curMonth === 0 ? 11 : curMonth - 1;
     const prevYear = curMonth === 0 ? curYear - 1 : curYear;
+    prevMonth = prevMonth === 0 ? 12 : prevMonth;
     const newDate = new Date(`${prevMonth + 1} 1 ${prevYear}`);
 
     await httpSrvc.fetchAllData(prevMonth, prevYear);
