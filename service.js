@@ -6,25 +6,20 @@ angular.module('budget',[]).service('httpSrvc', ['$http', function ($http) {
     yearly: []
   };
   
-  this.fetchAllData = function(month, year) {
-    return $http.get('/family-budget/categories.php').then(function(cats) {
-      data.categories = cats.data;
-    }).then(function() {
-      let qStr = '/family-budget/month.php?';
-      if (month != undefined) {
-        qStr += `month=${month}&`;
-      }
-      if (year) {
-        qStr += `year=${year}&`;
-      }
-      return $http.get(qStr);
-    }).then(function(months) {
-      data.monthly = months.data;
-    }).then(function() {
-      return $http.get('/family-budget/year.php');
-    }).then(function(years) {
-      data.yearly = years.data;
-    });
+  this.fetchAllData = async function(month, year) {
+    const cats = await $http.get('/family-budget/categories.php');
+    data.categories = cats.data;
+    let qStr = '/family-budget/month.php?';
+    if (month != undefined) {
+      qStr += `month=${month}&`;
+    }
+    if (year) {
+      qStr += `year=${year}&`;
+    }
+    const months = await $http.get(qStr);
+    data.monthly = months.data;
+    const years = await $http.get('/family-budget/year.php');
+    data.yearly = years.data;
   };
   
   this.submit = function(date, name, category, value) {

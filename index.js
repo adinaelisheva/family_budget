@@ -71,7 +71,7 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     const today = new Date();
     if (monthlyDate.getMonth() === today.getMonth() &&
         monthlyDate.getYear() === today.getYear() &&
-        $scope.monthlyData.length == 0) {
+        $scope.monthlyData.length === 0) {
       // It's a new month!
       await potentiallyOverflow();
     }
