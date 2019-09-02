@@ -39,7 +39,7 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
   }
   
   function updatePage(notifyStr) {
-    const m = today.getMonth();
+    const m = today.getMonth() + 1; // PHP months are 1-indexed
     const y = today.getFullYear();
     httpSrvc.fetchAllData(m, y).then(function() {
       $scope.categories = httpSrvc.data.categories;
