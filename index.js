@@ -51,7 +51,7 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     const prevYear = curMonth === 0 ? curYear - 1 : curYear;
     const newDate = new Date(`${prevMonth + 1} 1 ${prevYear}`);
 
-    await fetchAllData(prevMonth, prevYear);
+    await httpSrvc.fetchAllData(prevMonth, prevYear);
     const remaining = calculateRemaining($scope.monthlyData);
     for (cat in remaining) {
       if (remaining[cat] < 0 ) {
