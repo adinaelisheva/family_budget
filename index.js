@@ -48,7 +48,7 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     // this works because JS months are 0-indexed, but php and strings are 1-indexed
     let prevMonth = monthlyDate.getMonth();
     const curYear = monthlyDate.getFullYear();
-    const prevYear = curMonth === 0 ? curYear - 1 : curYear;
+    const prevYear = prevMonth === 0 ? curYear - 1 : curYear;
     prevMonth = prevMonth === 0 ? 12 : prevMonth;
     const newDate = new Date(`${prevMonth + 1} 1 ${prevYear}`);
 
