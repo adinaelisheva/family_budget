@@ -86,7 +86,7 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     if (notifyStr) {
       $.notify(notifyStr, 'success');
     };
-    $scope.apply();
+    $scope.$apply();
   }
   
   //function to interpolate colors and return an RGB style string
