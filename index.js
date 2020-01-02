@@ -100,7 +100,7 @@ angular.module('budget').controller('budgetCtrl', ['$scope', '$interval', 'httpS
     
     let curDays = monthlyDate.getDate();
     if(yearly) {
-      curDays += 30 * (monthlyDate.getMonth() - 1); //approximate day of year
+      curDays += 30 * (monthlyDate.getMonth()); //approximate day of year
     }
     const totalDays = yearly ? 361 : 30;
 
