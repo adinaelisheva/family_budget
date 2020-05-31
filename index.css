@@ -58,7 +58,8 @@ table.monthlyRem {
 .formItem {
 	display: flex;
 	flex-direction: column;
-	padding: 20px;
+	flex-shrink: 0;
+	padding: 20px 10px;
 }
 .formItem .label {
 	height: 30px;
@@ -70,7 +71,7 @@ table.monthlyRem {
 	height: 27px;
 }
 .formItem.amount input {
-	width: 65px;
+	width: 55px;
 }
 .formItem .label.submit {
 	height: 32px;
