@@ -13,7 +13,6 @@
   include("common.php"); 
 
   // Get the category
-
   $params = json_decode(file_get_contents('php://input'));
 
 
@@ -31,10 +30,18 @@
   }
 
   $datestr = date ("Y-m-d", $date);
+
+  $str = "SELECT category,name,value from transactions ORDER BY `id` DESC LIMIT 1;";
+  $res = mysqli_query($con,$str);
+  $lastEntry = mysqli_fetch_row($res);
+
+  if ($lastEntry[0] == $cat && $lastEntry[1] == $name && $lastEntry[2] == $value) {
+    die('{"Error":"Cannot insert duplicate of last entry"}');
+  }
  
   $sql = "INSERT INTO transactions (name, category, value, date) SELECT '$name', id, $value, '$datestr' FROM categories WHERE name = '$cat' ";
  
- echo("\n\nSQL: $sql\n");
+  echo("\n\nSQL: $sql\n");
   
   $result = mysqli_query($db, $sql) or die('{"Error":"'+mysqli_error($db)+'"}');
 
